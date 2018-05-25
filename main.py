@@ -178,7 +178,7 @@ def cutText(text,starttext='',maxframes=None,method='char',
             cut = text[:n]
         for r in range(1,slowfactor+1):
             cuts.append(cut)
-        n += random.randint(*randfactors)
+        n += randint(*randfactors)
     if not maxframes:
         maxframes=len(cuts)+repeatlast
     cuts = cuts[:maxframes-repeatlast]
@@ -212,7 +212,7 @@ def makeVideo(seqname, framerate='24', r='24'):
               +'temp/'+seqname+'.avi')
 
 download_yt(data.url)
-make_cuts( data.cuttimes)
+make_cuts(data.cuttimes)
 
 #create the terminal scenes
 #take a snapshot used as background for the terminal
