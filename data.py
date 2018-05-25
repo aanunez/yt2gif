@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import yt2gif
+
 url = 'https://www.youtube.com/watch?v=TS_59Y7bYoA'
 cuttimes =[
     ("00:00:40.5","00:00:57.0"),
@@ -37,6 +39,23 @@ subs =[
     ["I AM",white,(640,400),'62.8,64.6'],
     ["INVINCIBLE!!!",white,(640,460),'63.3,64.6']
 ]
+
+concatenate_order =[
+    "cut1.avi",
+    "dlvideo.avi",
+    "cut5.avi",
+    "subs.avi",
+    "cut4.avi",
+    "add_meta.avi",
+    "cut3.avi",
+    "concat.avi",
+    "cut7.avi",
+    "gifthat.avi",
+    "empty_screen.avi",
+    "meta.avi",
+    "cut8.avi"
+]
+
 lorem_ipsum = '''
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Aenean mauris libero, efficitur eget tincidunt nec, condimentum ac dui. 
@@ -83,4 +102,58 @@ dickbutt = '''
    MMM                                .MMM              MMM.       MM
   MMM                      MM        .MMM             MMM.       MMM.
  .MMM                     .MM  MM.   MMM~            MMM.      .MMM.'''
+
+def build():
+    #take a snapshot used as background for the terminal
+    yt2gif.snapshotBackground('temp/cut9.avi')
+    #open this code as a string
+    script_lines = [line.rstrip('\n') for line in open('data.py')]
+    #youtube-dl terminal scene
+    code_dlvideo_1 = '\n'.join(script_lines[45:54])
+    code_dlvideo_2 = '\n'.join(script_lines[45:54])
+    code_dlvideo_3 = '\n'.join(script_lines[45:54])
+    textcuts = cutText(code_dlvideo_1,method='char',randfactors=(1,3),repeatlast=10)
+    textcuts += cutText(code_dlvideo_2,starttext=code_dlvideo_1+'\n',
+                                  method='line',randfactors=(1,1),slowfactor=2,repeatlast=10)
+    textcuts += cutText(code_dlvideo_3,starttext=code_dlvideo_1+'\n'+code_dlvideo_2+'\n',
+                                  method='char',randfactors=(1,3),repeatlast=24)
+    drawFrames(seqname="dlvideo", textcuts=textcuts)
+    makeVideo(seqname="dlvideo")
+
+    #add subtitles scene
+    code_subs = '\n'.join(script_lines[45:54])
+    textcuts = cutText(code_subs,method='line',slowfactor=3,repeatlast=24,typingchar='')
+    drawFrames(seqname="subs", textcuts=textcuts, fontsize=15)
+    makeVideo(seqname="subs")
+
+    #add concat scene
+    code_concat = '\n'.join(script_lines[45:54])
+    textcuts = cutText(code_concat,method='line',slowfactor=4,repeatlast=24,typingchar='')
+    drawFrames(seqname="concat", textcuts=textcuts, fontsize=16)
+    makeVideo(seqname="concat")
+
+    #add gifthat scene
+    code_gif_that = '\n'.join(script_lines[45:54])
+    textcuts = cutText(code_gif_that,method='char',randfactors=(1,3),repeatlast=24)
+    drawFrames(seqname="gifthat", textcuts=textcuts, fontsize=16)
+    makeVideo(seqname="gifthat")
+
+    #add blackscreen scene
+    empty_screen = """\n\n"""
+    textcuts = cutText(empty_screen,method='char',randfactors=(1,1),repeatlast=24,typingchar='')
+    drawFrames(seqname="empty_screen", textcuts=textcuts, fontsize=16)
+    makeVideo(seqname="empty_screen")
+
+    #add "add a touch meta" scene
+    code_add_meta = '\n'.join(script_lines[45:54])
+    textcuts = cutText(code_add_meta,method='line',slowfactor=6,repeatlast=24,typingchar='')
+    drawFrames(seqname="add_meta", textcuts=textcuts)
+    makeVideo(seqname="add_meta")
+
+    #add a touch of meta
+    meta_cuts = cutText(data.dickbutt,method='line',
+            slowfactor=1,repeatlast=10,typingchar='')
+    drawFrames(seqname="meta",
+                    textcuts=meta_cuts,fontsize=14)
+    makeVideo(seqname="meta")
 

@@ -12,10 +12,10 @@ from PIL import ImageDraw
 if not os.path.exists('temp'):
     os.makedirs('temp')
 if os.path.exists('temp/sub/'):
-    shutil.rmtree('temp/sub/')
+    rmtree('temp/sub/')
 os.makedirs('temp/sub/')
 if os.path.exists('temp/frames/'):
-    shutil.rmtree('temp/frames/')
+    rmtree('temp/frames/')
 os.makedirs('temp/frames/')
 if os.path.exists('temp/log'):
     os.remove('temp/log')
@@ -23,7 +23,6 @@ if os.path.exists('temp/log'):
 #temp destinations 
 input_video = 'temp/in.mp4'
 temp_folder = 'temp/'
-logfile = 'temp/log'
 
 def download_yt( url ):
     os.system(r'youtube-dl -f 136 -o ' + input_video + ' ' + url)
@@ -38,8 +37,8 @@ def make_cuts( cutlist ):
         n += 1
         print( "Cutting scene " + str(n) )
         os.system( "ffmpeg -i " + input_video + " -ss " + cut[0] +
-            ' -filter:v "crop=1280:540:0:90"' + " -c:v ffv1" +
-            " -to "+ cut[1] + ' -r 24 -y ' + outvid + '>> ' + logfile)
+            ' -filter:v "crop=1280:540:0:90" -c:v ffv1' +
+            " -to "+ cut[1] + " -r 24 -y " + outvid)
             
        
 def makePngSub(text, color, position, filename):
@@ -206,100 +205,29 @@ def makeVideo(seqname, framerate='24', r='24'):
     """Take all seqname png and join them in an AVI video."""
     os.system('ffmpeg -framerate '+framerate
               +' -i temp/frames/'+seqname+'%04d.png'
-              +' -c:v ffv1'
-              +' -r '+r
-              +' -pix_fmt yuv420p -y '
+              +' -c:v ffv1'+' -r '+r+' -pix_fmt yuv420p -y '
               +'temp/'+seqname+'.avi')
+              
+def gif_that():
+    os.system('ffmpeg -y -i final.avi -vf fps=24,scale=1080:-1:'+
+              'flags=lanczos,palettegen temp/palette.png')
+    os.system('ffmpeg  -i final.avi -i temp/palette.png -filter_complex '+
+              '"fps=24,scale=1080:-1:flags=lanczos[x];[x][1:v]paletteuse" '+
+              'you_can_code_a.gif')
 
-download_yt(data.url)
-make_cuts(data.cuttimes)
+def concat_scenes( concat_order ):
+    with open('temp/list.txt','w') as f:
+        for vid in concat_order:
+            print("file '"+vid+"'",file=f)
+    os.system('ffmpeg -f concat -i temp/list.txt -c copy -y temp/concat_nosub.avi')
 
-#create the terminal scenes
-#take a snapshot used as background for the terminal
-snapshotBackground('temp/cut9.avi')
-#open this code as a string
-script_lines = [line.rstrip('\n') for line in open('data.py')]
-#youtube-dl terminal scene
-code_dlvideo_1 = '\n'.join(script_lines[45:54])
-code_dlvideo_2 = '\n'.join(script_lines[45:54])
-code_dlvideo_3 = '\n'.join(script_lines[45:54])
-textcuts = cutText(code_dlvideo_1,method='char',randfactors=(1,3),repeatlast=10)
-textcuts += cutText(code_dlvideo_2,starttext=code_dlvideo_1+'\n',
-                              method='line',randfactors=(1,1),slowfactor=2,repeatlast=10)
-textcuts += cutText(code_dlvideo_3,starttext=code_dlvideo_1+'\n'+code_dlvideo_2+'\n',
-                              method='char',randfactors=(1,3),repeatlast=24)
-drawFrames(seqname="dlvideo", textcuts=textcuts)
-makeVideo(seqname="dlvideo")
 
-#add subtitles scene
-code_subs = '\n'.join(script_lines[45:54])
-textcuts = cutText(code_subs,method='line',slowfactor=3,repeatlast=24,typingchar='')
-drawFrames(seqname="subs", textcuts=textcuts, fontsize=15)
-makeVideo(seqname="subs")
+def __main__():
+    download_yt(data.url)
+    make_cuts(data.cuttimes)
+    data.build()
+    concat_scenes( data.concatenate_order )        
+    subVideo(data.subs,inputvid='temp/concat_nosub.avi',outputvid='final.avi')
+    gif_that()
 
-#add concat scene
-code_concat = '\n'.join(script_lines[45:54])
-textcuts = cutText(code_concat,method='line',slowfactor=4,repeatlast=24,typingchar='')
-drawFrames(seqname="concat", textcuts=textcuts, fontsize=16)
-makeVideo(seqname="concat")
-
-#add gifthat scene
-code_gif_that = '\n'.join(script_lines[45:54])
-textcuts = cutText(code_gif_that,method='char',randfactors=(1,3),repeatlast=24)
-drawFrames(seqname="gifthat", textcuts=textcuts, fontsize=16)
-makeVideo(seqname="gifthat")
-
-#add blackscreen scene
-empty_screen = """\n\n"""
-textcuts = cutText(empty_screen,method='char',randfactors=(1,1),repeatlast=24,typingchar='')
-drawFrames(seqname="empty_screen", textcuts=textcuts, fontsize=16)
-makeVideo(seqname="empty_screen")
-
-#add "add a touch meta" scene
-code_add_meta = '\n'.join(script_lines[45:54])
-textcuts = cutText(code_add_meta,method='line',slowfactor=6,repeatlast=24,typingchar='')
-drawFrames(seqname="add_meta", textcuts=textcuts)
-makeVideo(seqname="add_meta")
-
-#add a touch of meta
-meta_cuts = cutText(data.dickbutt,method='line',
-        slowfactor=1,repeatlast=10,typingchar='')
-drawFrames(seqname="meta",
-                textcuts=meta_cuts,fontsize=14)
-makeVideo(seqname="meta")
-
-#concatenate the scenes
-to_concat =[
-    "cut1.avi",
-    "dlvideo.avi",
-    "cut5.avi",
-    "subs.avi",
-    "cut4.avi",
-    "add_meta.avi",
-    "cut3.avi",
-    "concat.avi",
-    "cut7.avi",
-    "gifthat.avi",
-    "empty_screen.avi",
-    "meta.avi",
-    "cut8.avi"
-]
-with open('temp/list.txt','w') as f:
-    for vid in to_concat:
-        print("file '"+vid+"'",file=f)
-os.system('ffmpeg -f concat -i temp/list.txt'+
-          ' -c copy -y temp/concat_nosub.avi >> ' + logfile)
-
-#add the subtitles
-subVideo(data.subs,inputvid='temp/concat_nosub.avi',outputvid='final.avi')
-
-#gif THAT
-os.system('ffmpeg -y -i '+
-          'final.avi -vf '+
-          'fps=24,scale=1080:-1:'+
-          'flags=lanczos,palettegen temp/palette.png >> ' + logfile)
-
-os.system('ffmpeg  -i final.avi '+
-          '-i temp/palette.png -filter_complex '+
-          '"fps=24,scale=1080:-1:flags=lanczos[x];[x][1:v]paletteuse" '+
-          'you_can_code_a.gif >> ' + logfile)
+__main__()
