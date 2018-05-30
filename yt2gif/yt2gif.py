@@ -27,7 +27,8 @@ def download_yt( url ):
     os.system(r'youtube-dl -f 136 -o temp/in.mp4 ' + url)
 
 
-def make_cuts( cutlist ):
+def make_cuts( cutlist, cinemaCrop=False ):
+    crop = ' -filter:v "crop=1280:540:0:90"' if cinemaCrop else ''
     n = 1
     cuts=[]
     for cut in cutlist:
@@ -36,7 +37,7 @@ def make_cuts( cutlist ):
         n += 1
         print( "Cutting scene " + str(n) )
         os.system( "ffmpeg -i temp/in.mp4 -ss " + cut[0] +
-            ' -filter:v "crop=1280:540:0:90" -c:v ffv1' +
+            crop + ' -c:v ffv1' +
             " -to "+ cut[1] + " -r 24 -y " + outvid)
             
        

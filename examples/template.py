@@ -4,6 +4,9 @@ import yt2gif
 
 url = 'Some youtube url here'
 
+# Set to true to crop to extra wide for that ciema effect
+crop = False
+
 # You must specify atleast one cut time
 cuttimes =[
     ("00:00:30.5","00:00:35.0")

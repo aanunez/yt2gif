@@ -7,6 +7,8 @@ cuttimes =[
     ("00:04:15.5","00:04:18.0")
 ]
 
+Crop = False
+
 subs =[]
 
 concatenate_order =[
