@@ -210,12 +210,12 @@ def makeVideo(seqname, framerate='24', r='24'):
               +' -c:v ffv1'+' -r '+r+' -pix_fmt yuv420p -y '
               +'temp/'+seqname+'.avi')
               
-def gif_that():
+def gif_that(name):
     os.system('ffmpeg -y -i final.avi -vf fps=24,scale=1080:-1:'+
               'flags=lanczos,palettegen temp/palette.png')
     os.system('ffmpeg  -i final.avi -i temp/palette.png -filter_complex '+
               '"fps=24,scale=1080:-1:flags=lanczos[x];[x][1:v]paletteuse" '+
-              'output.gif')
+              name + '.gif')
 
 def concat_scenes( concat_order ):
     with open('temp/list.txt','w') as f:

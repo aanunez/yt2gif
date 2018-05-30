@@ -9,15 +9,14 @@ from sys import argv
 def parse_args():
     parser = ArgumentParser(description=
         'Turn a youtube video into a gif!')
-        
     parser.add_argument('-s','--script',
         help='Python file that specifies a gif to create. See the "examples" folder.')
-        
     parser.add_argument('-u','--url',
         help='Youtube url to download video from')
     parser.add_argument('-c','--cut',
         help='Time to cut the video down to. Formated as hh:mm:ss.x-hh:mm:ss.x')
-        
+    parser.add_argument('-o','--name', default="final"
+        help='File to save the final gif as')
     return parser.parse_args()
 
 def main():
@@ -35,14 +34,14 @@ def main():
         yt2gif.make_cuts(data.cuttimes)
         data.build()
         yt2gif.concat_scenes( data.concatenate_order )        
-        yt2gif.subVideo(data.subs,inputvid='temp/concat_nosub.avi',outputvid='final.avi')
+        yt2gif.subVideo(data.subs,inputvid='temp/concat_nosub.avi',outputvid=opt.name+'.avi')
         
     else:
         yt2gif.download_yt(opts.url)
         yt2gif.make_cuts([tuple(opts.cut.split('-'))])
-        rename('temp/cut1.avi', 'final.avi')
+        rename('temp/cut1.avi', opt.name+'.avi')
         
-    yt2gif.gif_that()
+    yt2gif.gif_that(opt.name)
     yt2gif.del_temp()
     
 if __name__ == "__main__":

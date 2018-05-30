@@ -12,8 +12,7 @@ Create a rick and morty gif from RTJ's Oh Mama
    
 #### Bugs/todo
 
-* Move to a real temp structure
+* Move to a real temp structure, right now stuff is created in the calling directory
 * Finish that gif for my friend jessie
-* Make sure this can actually be installed and used
 * General clean up of yt2gif
 * Try to make it work on windows
