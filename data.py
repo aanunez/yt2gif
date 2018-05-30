@@ -112,48 +112,48 @@ def build():
     code_dlvideo_1 = '\n'.join(script_lines[45:54])
     code_dlvideo_2 = '\n'.join(script_lines[45:54])
     code_dlvideo_3 = '\n'.join(script_lines[45:54])
-    textcuts = cutText(code_dlvideo_1,method='char',randfactors=(1,3),repeatlast=10)
-    textcuts += cutText(code_dlvideo_2,starttext=code_dlvideo_1+'\n',
+    textcuts = yt2gif.cutText(code_dlvideo_1,method='char',randfactors=(1,3),repeatlast=10)
+    textcuts += yt2gif.cutText(code_dlvideo_2,starttext=code_dlvideo_1+'\n',
                                   method='line',randfactors=(1,1),slowfactor=2,repeatlast=10)
-    textcuts += cutText(code_dlvideo_3,starttext=code_dlvideo_1+'\n'+code_dlvideo_2+'\n',
+    textcuts += yt2gif.cutText(code_dlvideo_3,starttext=code_dlvideo_1+'\n'+code_dlvideo_2+'\n',
                                   method='char',randfactors=(1,3),repeatlast=24)
-    drawFrames(seqname="dlvideo", textcuts=textcuts)
-    makeVideo(seqname="dlvideo")
+    yt2gif.drawFrames(seqname="dlvideo", textcuts=textcuts)
+    yt2gif.makeVideo(seqname="dlvideo")
 
     #add subtitles scene
     code_subs = '\n'.join(script_lines[45:54])
-    textcuts = cutText(code_subs,method='line',slowfactor=3,repeatlast=24,typingchar='')
-    drawFrames(seqname="subs", textcuts=textcuts, fontsize=15)
-    makeVideo(seqname="subs")
+    textcuts = yt2gif.cutText(code_subs,method='line',slowfactor=3,repeatlast=24,typingchar='')
+    yt2gif.drawFrames(seqname="subs", textcuts=textcuts, fontsize=15)
+    yt2gif.makeVideo(seqname="subs")
 
     #add concat scene
     code_concat = '\n'.join(script_lines[45:54])
-    textcuts = cutText(code_concat,method='line',slowfactor=4,repeatlast=24,typingchar='')
-    drawFrames(seqname="concat", textcuts=textcuts, fontsize=16)
-    makeVideo(seqname="concat")
+    textcuts = yt2gif.cutText(code_concat,method='line',slowfactor=4,repeatlast=24,typingchar='')
+    yt2gif.drawFrames(seqname="concat", textcuts=textcuts, fontsize=16)
+    yt2gif.makeVideo(seqname="concat")
 
     #add gifthat scene
     code_gif_that = '\n'.join(script_lines[45:54])
-    textcuts = cutText(code_gif_that,method='char',randfactors=(1,3),repeatlast=24)
-    drawFrames(seqname="gifthat", textcuts=textcuts, fontsize=16)
-    makeVideo(seqname="gifthat")
+    textcuts = yt2gif.cutText(code_gif_that,method='char',randfactors=(1,3),repeatlast=24)
+    yt2gif.drawFrames(seqname="gifthat", textcuts=textcuts, fontsize=16)
+    yt2gif.makeVideo(seqname="gifthat")
 
     #add blackscreen scene
     empty_screen = """\n\n"""
-    textcuts = cutText(empty_screen,method='char',randfactors=(1,1),repeatlast=24,typingchar='')
-    drawFrames(seqname="empty_screen", textcuts=textcuts, fontsize=16)
-    makeVideo(seqname="empty_screen")
+    textcuts = yt2gif.cutText(empty_screen,method='char',randfactors=(1,1),repeatlast=24,typingchar='')
+    yt2gif.drawFrames(seqname="empty_screen", textcuts=textcuts, fontsize=16)
+    yt2gif.makeVideo(seqname="empty_screen")
 
     #add "add a touch meta" scene
     code_add_meta = '\n'.join(script_lines[45:54])
-    textcuts = cutText(code_add_meta,method='line',slowfactor=6,repeatlast=24,typingchar='')
-    drawFrames(seqname="add_meta", textcuts=textcuts)
-    makeVideo(seqname="add_meta")
+    textcuts = yt2gif.cutText(code_add_meta,method='line',slowfactor=6,repeatlast=24,typingchar='')
+    yt2gif.drawFrames(seqname="add_meta", textcuts=textcuts)
+    yt2gif.makeVideo(seqname="add_meta")
 
     #add a touch of meta
-    meta_cuts = cutText(data.dickbutt,method='line',
+    meta_cuts = yt2gif.cutText(dickbutt,method='line',
             slowfactor=1,repeatlast=10,typingchar='')
-    drawFrames(seqname="meta",
+    yt2gif.drawFrames(seqname="meta",
                     textcuts=meta_cuts,fontsize=14)
-    makeVideo(seqname="meta")
+    yt2gif.makeVideo(seqname="meta")
 

@@ -17,10 +17,7 @@ os.makedirs('temp/sub/')
 if os.path.exists('temp/frames/'):
     rmtree('temp/frames/')
 os.makedirs('temp/frames/')
-if os.path.exists('temp/log'):
-    os.remove('temp/log')
    
-#temp destinations 
 input_video = 'temp/in.mp4'
 temp_folder = 'temp/'
 
@@ -220,14 +217,3 @@ def concat_scenes( concat_order ):
         for vid in concat_order:
             print("file '"+vid+"'",file=f)
     os.system('ffmpeg -f concat -i temp/list.txt -c copy -y temp/concat_nosub.avi')
-
-
-def __main__():
-    download_yt(data.url)
-    make_cuts(data.cuttimes)
-    data.build()
-    concat_scenes( data.concatenate_order )        
-    subVideo(data.subs,inputvid='temp/concat_nosub.avi',outputvid='final.avi')
-    gif_that()
-
-__main__()
