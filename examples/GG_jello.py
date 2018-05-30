@@ -2,9 +2,9 @@
 
 import yt2gif
 
-url = 'https://www.youtube.com/watch?v=HcXMahu7q-k'
+url = 'https://www.youtube.com/watch?v=viP_aYOSecU'
 cuttimes =[
-    ("00:00:02.5","00:00:10.0")
+    ("00:04:15.5","00:04:18.0")
 ]
     
 

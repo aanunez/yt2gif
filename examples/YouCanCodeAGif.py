@@ -107,7 +107,7 @@ def build():
     #take a snapshot used as background for the terminal
     yt2gif.snapshotBackground('temp/cut9.avi')
     #open this code as a string
-    script_lines = [line.rstrip('\n') for line in open('data.py')]
+    script_lines = [line.rstrip('\n') for line in open('examples/YouCanCodeAGif.py')]
     #youtube-dl terminal scene
     code_dlvideo_1 = '\n'.join(script_lines[45:54])
     code_dlvideo_2 = '\n'.join(script_lines[45:54])

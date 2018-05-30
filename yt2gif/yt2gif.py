@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import data
 import numpy
 from shutil import rmtree
 from random import randint
@@ -61,6 +60,9 @@ def makePngSub(text, color, position, filename):
 def subVideo(subs,inputvid,outputvid):
     """Take a list a subtitles, make each png with makePngSub()
     and add the pngs to the video at the given intervals"""
+    if not subs:
+        os.rename(inputvid, outputvid)
+        return 
     n=1
     subfiles=[]
     for sub in subs:
@@ -126,8 +128,8 @@ def drawTerminal(text, fontsize):
     white = (190,210,230)
     x,y=(695,500)
 
-    font_title = ImageFont.truetype("fonts/COURIER.TTF",15)
-    font_text = ImageFont.truetype("fonts/COURIER.TTF",fontsize)
+    font_title = ImageFont.truetype("yt2gif/fonts/COURIER.TTF",15)
+    font_text = ImageFont.truetype("yt2gif/fonts/COURIER.TTF",fontsize)
     img=Image.new("RGBA", (x,y),black)
     draw = ImageDraw.Draw(img)
     draw.rectangle(((4,4),(x-5,y-5)), outline = light)
@@ -213,7 +215,7 @@ def gif_that():
               'flags=lanczos,palettegen temp/palette.png')
     os.system('ffmpeg  -i final.avi -i temp/palette.png -filter_complex '+
               '"fps=24,scale=1080:-1:flags=lanczos[x];[x][1:v]paletteuse" '+
-              'you_can_code_a.gif')
+              'output.gif')
 
 def concat_scenes( concat_order ):
     with open('temp/list.txt','w') as f:

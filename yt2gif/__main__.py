@@ -3,20 +3,24 @@
 import yt2gif
 from argparse import ArgumentParser
 from importlib import import_module
-import data
+from imp import load_source
 
 def parse_args():
     parser = ArgumentParser(description=
         'Explanation here.')
         
-    parser.add_argument('input', nargs='?', default="data.py",
+    parser.add_argument('input', nargs='?', default="examples/YouCanCodeAGif.py",
         help='input')
 
     return parser.parse_args()
 
 def main():
-    #opts = parse_args()
-    #import_module(opts.input[:-3])
+    opts = parse_args()
+
+    global data
+    with open(opts.input) as fh:
+        data = load_source('data', '', fh)
+
     yt2gif.make_temp()
     yt2gif.download_yt(data.url)
     yt2gif.make_cuts(data.cuttimes)
