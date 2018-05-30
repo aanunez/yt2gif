@@ -1,6 +1,6 @@
 temp/*
-*.avi
-*.gif
+./*.avi
+./*.gif
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
