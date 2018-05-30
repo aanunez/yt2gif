@@ -6,7 +6,6 @@ url = 'https://www.youtube.com/watch?v=viP_aYOSecU'
 cuttimes =[
     ("00:04:15.5","00:04:18.0")
 ]
-    
 
 subs =[]
 

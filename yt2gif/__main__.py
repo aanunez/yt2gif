@@ -7,7 +7,7 @@ from imp import load_source
 
 def parse_args():
     parser = ArgumentParser(description=
-        'Explanation here.')
+        'Turn a youtube video into a gif!')
         
     parser.add_argument('input', nargs='?', default="examples/YouCanCodeAGif.py",
         help='input')
@@ -28,7 +28,7 @@ def main():
     yt2gif.concat_scenes( data.concatenate_order )        
     yt2gif.subVideo(data.subs,inputvid='temp/concat_nosub.avi',outputvid='final.avi')
     yt2gif.gif_that()
-    #yt2gif.del_temp()
+    yt2gif.del_temp()
     
 if __name__ == "__main__":
     main()
