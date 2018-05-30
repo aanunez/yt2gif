@@ -9,31 +9,34 @@ from PIL import ImageFont
 from PIL import Image
 from PIL import ImageDraw
 
-if not os.path.exists('temp'):
-    os.makedirs('temp')
-if os.path.exists('temp/sub/'):
-    rmtree('temp/sub/')
-os.makedirs('temp/sub/')
-if os.path.exists('temp/frames/'):
-    rmtree('temp/frames/')
-os.makedirs('temp/frames/')
-   
-input_video = 'temp/in.mp4'
-temp_folder = 'temp/'
+def make_temp():
+    if not os.path.exists('temp'):
+        os.makedirs('temp')
+        
+    if os.path.exists('temp/sub/'):
+        rmtree('temp/sub/')
+    os.makedirs('temp/sub/')
+
+    if os.path.exists('temp/frames/'):
+        rmtree('temp/frames/')
+    os.makedirs('temp/frames/')
+    
+def del_temp():
+    rmtree('temp/')
 
 def download_yt( url ):
-    os.system(r'youtube-dl -f 136 -o ' + input_video + ' ' + url)
+    os.system(r'youtube-dl -f 136 -o temp/in.mp4 ' + url)
 
 
 def make_cuts( cutlist ):
     n = 1
     cuts=[]
     for cut in cutlist:
-        outvid = temp_folder + 'cut' + str(n) + '.avi'
+        outvid = 'temp/cut' + str(n) + '.avi'
         cuts.append(outvid)
         n += 1
         print( "Cutting scene " + str(n) )
-        os.system( "ffmpeg -i " + input_video + " -ss " + cut[0] +
+        os.system( "ffmpeg -i temp/in.mp4 -ss " + cut[0] +
             ' -filter:v "crop=1280:540:0:90" -c:v ffv1' +
             " -to "+ cut[1] + " -r 24 -y " + outvid)
             
