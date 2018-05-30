@@ -2,6 +2,10 @@
 
 import yt2gif
 
+# Note: The line numbers the build func is wrong which is why 
+# some things in the gif don't time correctly. I can't be bothered
+# to fix that.
+
 url = 'https://www.youtube.com/watch?v=TS_59Y7bYoA'
 cuttimes =[
     ("00:00:40.5","00:00:57.0"),
