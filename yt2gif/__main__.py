@@ -25,7 +25,6 @@ def main():
     if len(argv) == 1:
         argv.append('-h')
     opts = parse_args()
-    yt2gif.make_temp()
     
     if not opts.url:
         global data
@@ -44,7 +43,7 @@ def main():
         rename('temp/cut1.avi', opts.name+'.avi')
         
     yt2gif.gif_that(opts.name)
-    yt2gif.del_temp()
+    yt2gif.cleanup()
     
 if __name__ == "__main__":
     main()
