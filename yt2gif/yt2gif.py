@@ -7,21 +7,29 @@ from random import randint
 from PIL import Image, ImageFont, ImageDraw
 from tempfile import gettempdir
 
-td = gettempdir() + '/yt2gif'
-os.makedirs(td + '/sub/')
-os.makedirs(td + '/frames/')	
+td = os.path.join(gettempdir(),'yt2gif')
+sub_dir = os.makedirs(os.path.join(td,'sub'))
+frames_dir = os.makedirs(os.path.join(td,'frames'))	
+
+ubuntu_font = os.path.join('yt2gif','fonts','Ubuntu-B.ttf')
+courier_font = os.path.join('yt2gif','fonts','COURIER.TTF')
+palette_file = os.path.join(td,'palette.png')
+list_file = os.path.join(td,'list.txt')
+concat_file = os.path.join(td,'concat_nosub.avi')
+in_file = os.path.join(td,'in.mp4')
+background_file = os.path.join(td,'background.png')
 
 cleanup     = lambda     : rmtree(td)
-download_yt = lambda url : os.system(r'youtube-dl -f 136 -o '+ td +'/in.mp4 ' + url)
+download_yt = lambda url : os.system('youtube-dl -f 136 -o ' + in_file + ' ' + url)
 
 def make_cuts(cutlist, cinemaCrop=False):
     crop = ' -filter:v "crop=1280:540:0:90"' if cinemaCrop else ''
     cuts=[]
     for n,cut in enumerate(cutlist,1):
-        outvid = td + '/cut' + str(n) + '.avi'
+        outvid = os.path.join(td,'cut'+str(n)+'.avi')
         cuts.append(outvid)
         print( 'Cutting scene ' + str(n+1) )
-        os.system( 'ffmpeg -i '+ td +'/in.mp4 -ss ' + cut[0] + crop + ' -c:v ffv1' +
+        os.system( 'ffmpeg -i '+ in_file + ' -ss ' + cut[0] + crop + ' -c:v ffv1' +
             ' -to '+ cut[1] + ' -r 24 -y ' + outvid)
             
        
@@ -29,13 +37,13 @@ def makePngSub(text, color, position, filename):
     """"Turn a text into a png"""
     img  = Image.new('RGBA',(1280, 544))
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("fonts/Ubuntu-B.ttf",60)
+    font = ImageFont.truetype(ubuntu_font,60)
     w, h = draw.multiline_textsize(text, font=font)
     x, y = position[0] - w/2, position[1] - h/2
     for i in range(1,6):
         draw.multiline_text((x+i,y+i), text, fill=(0,0,0), font=font, align='center')
     draw.multiline_text((x,y), text, fill=color, font=font, align='center')
-    img.save(td + '/sub/'+filename+'.png', 'PNG')
+    img.save(os.path.join(sub_dir,filename+'.png'), 'PNG')
     return filename
 
 
@@ -70,7 +78,7 @@ def subVideo(subs,inputvid,outputvid):
 
 def snapshotBackground(cutscene):
     """Take a 1-frame shot from the video, used as background for the terminal"""
-    os.system('ffmpeg -ss 00:00:00 -i '+cutscene+' -vf "select=eq(n\,0)" -q:v 1 -y '+td+'/background.png')
+    os.system('ffmpeg -ss 00:00:00 -i '+cutscene+' -vf "select=eq(n\,0)" -q:v 1 -y ' + background_file)
 
 
 def find_coeffs(pa, pb):
@@ -95,13 +103,13 @@ def drawTerminal(text, fontsize):
     white = (190,210,230)
     x,y=(695,500)
 
-    font_title = ImageFont.truetype("yt2gif/fonts/COURIER.TTF",15)
-    font_text = ImageFont.truetype("yt2gif/fonts/COURIER.TTF",fontsize)
+    font_title = ImageFont.truetype(courier_font,15)
+    font_text = ImageFont.truetype(courier_font,fontsize)
     img=Image.new("RGBA", (x,y),black)
     draw = ImageDraw.Draw(img)
-    draw.rectangle(((4,4),(x-5,y-5)), outline = light)
-    draw.rectangle(((5,5),(x-5,y-5)), outline = white)
-    draw.rectangle(((9,9),(x-10,30)), outline = light)
+    draw.rectangle(((4,4),(x-5,y-5)),   outline = light)
+    draw.rectangle(((5,5),(x-5,y-5)),   outline = white)
+    draw.rectangle(((9,9),(x-10,30)),   outline = light)
     draw.rectangle(((10,10),(x-10,30)), outline = white)
 
     draw.text((11, 15),'  GIFOLATINE 3000 V1.337 - By 1-Sisyphe',light, font=font_title)
@@ -122,7 +130,7 @@ def drawTerminal(text, fontsize):
     img = new_im.transform(new_size, Image.PERSPECTIVE, coeffs,
         Image.BICUBIC)
     img = img.rotate(0.5, resample=Image.BICUBIC)
-    img_finale = Image.open(td+'/background.png')
+    img_finale = Image.open(background_file)
     img_finale.paste(img,(340,-75),img)
 
     return img_finale
@@ -162,24 +170,25 @@ def drawFrames(seqname, textcuts, fontsize=16):
     for n,tc in enumerate(textcuts):
 		cut = ' ' if tc == '' else tc.replace('\n',' \n ')
         img = drawTerminal(cut, fontsize)
-        img.save(td+'/frames/'+seqname+str(n).zfill(4)+'.png')
+        img.save(os.path.join(frames_dir,seqname+str(n).zfill(4)+'.png'))
 
 def makeVideo(seqname, framerate='24', r='24'):
     """Take all seqname png and join them in an AVI video."""
     os.system('ffmpeg -framerate '+framerate
-              +' -i ' + td + '/frames/'+seqname+'%04d.png'
+              +' -i ' + os.path.join(frames_dir,seqname+'%04d.png')
               +' -c:v ffv1'+' -r '+r+' -pix_fmt yuv420p -y '
-              +td+'/'+seqname+'.avi')
-              
+              +os.path.join(td,seqname+'.avi'))
+
+
 def gif_that(name):
     os.system('ffmpeg -y -i final.avi -vf fps=24,scale=1080:-1:'+
-              'flags=lanczos,palettegen ' + td + '/palette.png')
-    os.system('ffmpeg  -i final.avi -i ' + td + '/palette.png -filter_complex '+
+              'flags=lanczos,palettegen ' + palette_file)
+    os.system('ffmpeg  -i final.avi -i ' + palette_file + ' -filter_complex '+
               '"fps=24,scale=1080:-1:flags=lanczos[x];[x][1:v]paletteuse" '+
               name + '.gif')
 
 def concat_scenes( concat_order ):
-    with open(td+'/list.txt','w') as f:
+    with open(list_file,'w') as f:
         for vid in concat_order:
             print("file '"+vid+"'",file=f)
-    os.system('ffmpeg -f concat -i ' + td + '/list.txt -c copy -y ' + td + '/concat_nosub.avi')
+    os.system('ffmpeg -f concat -i ' + list_file +' -c copy -y ' + concat_file)
