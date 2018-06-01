@@ -27,8 +27,6 @@ Or a gif of Awkwafina (a rapper) getting punched by her car
 
 #### Bugs/todo
 
-* Windows: only works without installing. Need to move the .exes to the install directory
-* Check if ffmpeg and youtube-dl are installed and recommend them
 * Finish that gif for my friend jessie
 * General clean up of yt2gif
 * Let scripts define real crop patterns and not just 'cinema'
