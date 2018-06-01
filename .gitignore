@@ -2,6 +2,8 @@ temp/*
 ./*.avi
 ./*.gif
 *.lock
+*.exe
+*.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

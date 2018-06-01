@@ -3,6 +3,16 @@ Downloads a youtube video, turns it into a gif with optional subtitles.
 
 Based on [this](https://github.com/1-Sisyphe/youCanCodeAGif). WIP. Lots of the code is still under their MIT license, but I'm expecting to eventually overhaul everything. 
 
+#### Dependencies 
+
+You can either use `pipenv` to install the requirments in a virtual env or install with...
+
+    pip3 install numpy pillow
+	
+You will also need `ffmpeg` and `youtube-dl`, they ship with most modern linux distros, or are in the repos.
+
+On Windows you can either manually download them and place them in the calling directory or run the provided `win_dl.py` script.
+
 #### Examples
 
 Create a rick and morty gif from RTJ's Oh Mama
@@ -17,8 +27,6 @@ Or a gif of Awkwafina (a rapper) getting punched by her car
 
 #### Bugs/todo
 
-* Move to a real temp structure, right now stuff is created in the calling directory
 * Finish that gif for my friend jessie
 * General clean up of yt2gif
 * Let scripts define real crop patterns and not just 'cinema'
-* Try to make it work on windows
