@@ -4,7 +4,8 @@ import yt2gif
 
 # Note: The line numbers the build func is wrong which is why 
 # some things in the gif don't time correctly. I can't be bothered
-# to fix that.
+# to fix that. Only works on Linux.
+# Currently has a few other issue that I plan to work out (whenever)
 
 url = 'https://www.youtube.com/watch?v=TS_59Y7bYoA'
 cuttimes =[
@@ -111,7 +112,7 @@ dickbutt = '''
 
 def build():
     #take a snapshot used as background for the terminal
-    yt2gif.snapshotBackground('temp/cut9.avi')
+    yt2gif.snapshotBackground(yt2gif.td+'/cut9.avi')
     #open this code as a string
     script_lines = [line.rstrip('\n') for line in open('examples/YouCanCodeAGif.py')]
     #youtube-dl terminal scene

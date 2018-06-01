@@ -6,10 +6,13 @@ from shutil import rmtree
 from random import randint
 from PIL import Image, ImageFont, ImageDraw
 from tempfile import gettempdir
+from datetime import datetime
 
-td = os.path.join(gettempdir(),'yt2gif')
-sub_dir = os.makedirs(os.path.join(td,'sub'))
-frames_dir = os.makedirs(os.path.join(td,'frames'))	
+td = os.path.join(gettempdir(),'yt2gif',str(datetime.now()).split('.')[0].replace(' ','.'))
+sub_dir = os.path.join(td,'sub')
+os.makedirs(sub_dir)
+frames_dir = os.path.join(td,'frames')
+os.makedirs(frames_dir)
 
 ubuntu_font = os.path.join('yt2gif','fonts','Ubuntu-B.ttf')
 courier_font = os.path.join('yt2gif','fonts','COURIER.TTF')
@@ -32,20 +35,6 @@ def make_cuts(cutlist, cinemaCrop=False):
         os.system( 'ffmpeg -i '+ in_file + ' -ss ' + cut[0] + crop + ' -c:v ffv1' +
             ' -to '+ cut[1] + ' -r 24 -y ' + outvid)
             
-       
-def makePngSub(text, color, position, filename):
-    """"Turn a text into a png"""
-    img  = Image.new('RGBA',(1280, 544))
-    draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(ubuntu_font,60)
-    w, h = draw.multiline_textsize(text, font=font)
-    x, y = position[0] - w/2, position[1] - h/2
-    for i in range(1,6):
-        draw.multiline_text((x+i,y+i), text, fill=(0,0,0), font=font, align='center')
-    draw.multiline_text((x,y), text, fill=color, font=font, align='center')
-    img.save(os.path.join(sub_dir,filename+'.png'), 'PNG')
-    return filename
-
 
 def subVideo(subs,inputvid,outputvid):
     """Take a list a subtitles, make each png with makePngSub()
@@ -53,10 +42,19 @@ def subVideo(subs,inputvid,outputvid):
     if not subs:
         os.rename(inputvid, outputvid)
         return 
-    subfiles=[]
-    for n,sub in enumerate(subs,1):
-        subfile = makePngSub(text=sub[0],color=sub[1],position=sub[2],filename=str(n))
-        subfiles.append(subfile)
+        
+    def makePngSub(text, color, position, filename):
+        """"Turn a text into a png"""
+        img  = Image.new('RGBA',(1280, 544))
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype(ubuntu_font,60)
+        w, h = draw.multiline_textsize(text, font=font)
+        x, y = position[0] - w/2, position[1] - h/2
+        for i in range(1,6):
+            draw.multiline_text((x+i,y+i), text, fill=(0,0,0), font=font, align='center')
+        draw.multiline_text((x,y), text, fill=color, font=font, align='center')
+        img.save(os.path.join(sub_dir,filename+'.png'), 'PNG')
+        return filename
 
     def writeFilterblocks(subs):
         """write the complex filter to chain-add all the png in one shot"""
@@ -64,16 +62,22 @@ def subVideo(subs,inputvid,outputvid):
         for n,sub in enumerate(subs):
             timing = sub[3]
             blocks=['']*4
-			blocks[0] = '"[0:v]' if n==0 else '[tmp]'
+            blocks[0] = '"[0:v]' if n==0 else '[tmp]'
             blocks[1] = '['+str(n+1)+':v]'
             blocks[2] = "overlay=enable='between(t,{})'".format(timing)
-			blocks[3] = ' [tmp]; ' if (n+1)!=len(subs) else '"'
+            blocks[3] = ' [tmp]; ' if (n+1)!=len(subs) else '"'
             filter_blocks+=blocks
         return filter_blocks
+     
+    subfiles=[]
+    for n,sub in enumerate(subs,1):
+        subfile = makePngSub(text=sub[0],color=sub[1],position=sub[2],filename=str(n))
+        subfiles.append(subfile)
 
-    inputblocks = ['ffmpeg -i '+inputvid]+['-i '+subfile for subfile in subfiles]
+    inputblocks = ''.join([' -i '+os.path.join(sub_dir,subfile+'.png') for subfile in subfiles])
     filterstr = '-filter_complex '+''.join(writeFilterblocks(subs))
-    os.system(' '.join(inputblocks) + ' ' + filterstr + ' -y -c:v ffv1 '+ outputvid)
+    print("This is a test \n\n\n\n\n")
+    os.system('ffmpeg -i '+ inputvid + inputblocks + ' ' + filterstr + ' -y -c:v ffv1 '+ outputvid)
 
 
 def snapshotBackground(cutscene):
@@ -168,9 +172,9 @@ def drawFrames(seqname, textcuts, fontsize=16):
     save the result as a png in temp/frames, with an incremental filename
     starting by seqname."""
     for n,tc in enumerate(textcuts):
-		cut = ' ' if tc == '' else tc.replace('\n',' \n ')
+        cut = ' ' if tc == '' else tc.replace('\n',' \n ')
         img = drawTerminal(cut, fontsize)
-        img.save(os.path.join(frames_dir,seqname+str(n).zfill(4)+'.png'))
+        img.save(os.path.join(frames_dir,seqname+str(n).zfill(4))+'.png')
 
 def makeVideo(seqname, framerate='24', r='24'):
     """Take all seqname png and join them in an AVI video."""
