@@ -8,7 +8,8 @@ from PIL import Image, ImageFont, ImageDraw
 from tempfile import gettempdir
 from datetime import datetime
 
-td = os.path.join(gettempdir(),'yt2gif',str(datetime.now()).split('.')[0].replace(' ','.'))
+td = os.path.join(gettempdir(),'yt2gif',
+	str(datetime.now()).split('.')[0].replace(' ','.').replace(':','.'))
 sub_dir = os.path.join(td,'sub')
 os.makedirs(sub_dir)
 frames_dir = os.path.join(td,'frames')

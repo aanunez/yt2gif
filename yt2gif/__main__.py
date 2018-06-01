@@ -47,10 +47,10 @@ def main():
     else:
         yt2gif.download_yt(opts.url)
         yt2gif.make_cuts([tuple(opts.cut.split('-'))], opts.crop)
-        rename(os.path.join(yt2gif.td,'cut1.avi'), opts.name+'.avi')
+        rename(path.join(yt2gif.td,'cut1.avi'), opts.name+'.avi')
         
     yt2gif.gif_that(opts.name)
-    #yt2gif.cleanup()
+    yt2gif.cleanup()
     
 if __name__ == "__main__":
     main()
