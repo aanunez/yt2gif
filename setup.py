@@ -11,6 +11,10 @@ setup(
 	license = 'GPLv3',
 	url = 'https://github.com/aanunez/yt2gif',
 	packages = ['yt2gif'],
+	install_requires=[
+        'numpy',
+        'pillow'
+    ],
     entry_points={
         'console_scripts': [
             'yt2gif = yt2gif.__main__:main'

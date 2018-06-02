@@ -112,7 +112,7 @@ dickbutt = '''
 
 def build():
     #take a snapshot used as background for the terminal
-    yt2gif.snapshotBackground(yt2gif.td+'/cut9.avi')
+    yt2gif.snapshot(yt2gif.td+'/cut9.avi')
     #open this code as a string
     script_lines = [line.rstrip('\n') for line in open('examples/YouCanCodeAGif.py')]
     #youtube-dl terminal scene

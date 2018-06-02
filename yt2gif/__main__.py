@@ -70,7 +70,7 @@ def main():
         yt2gif.download_yt(data.url)
         yt2gif.make_cuts(data.cuttimes, opts.crop)
         data.build()
-        yt2gif.concat_scenes( data.concatenate_order )        
+        yt2gif.concatScenes( data.concatenate_order )        
         yt2gif.subVideo(data.subs,inputvid=yt2gif.concat_file,outputvid=opts.name+'.avi')
         
     else:

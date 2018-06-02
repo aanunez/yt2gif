@@ -1,7 +1,7 @@
 # yt2gif
-Downloads a youtube video, turns it into a gif with optional subtitles.
+Downloads a youtube video and turns it into a gif. By writing a short python script subtitles and scenes (in any order) can be added.
 
-Based on [this](https://github.com/1-Sisyphe/youCanCodeAGif). WIP. Lots of the code is still under their MIT license, but I'm expecting to eventually overhaul everything. 
+A gernalized version of [this](https://github.com/1-Sisyphe/youCanCodeAGif) project. 
 
 #### Dependencies 
 
@@ -15,6 +15,8 @@ On Windows you can either manually download them and place them in the calling d
 
 #### Examples
 
+For script examples check the examples folder.
+
 Create a rick and morty gif from RTJ's Oh Mama
 
     python3 -m yt2gif -u "https://www.youtube.com/watch?v=EBYsx1QWF9A" -c 00:01:53.0-00:01:54.2
@@ -27,8 +29,5 @@ Or a gif of Awkwafina (a rapper) getting punched by her car
 
 #### Bugs/todo
 
-* Windows: only works without installing. Need to move the .exes to the install directory
-* Check if ffmpeg and youtube-dl are installed and recommend them
+* Make more scripts, find more bugs.
 * Finish that gif for my friend jessie
-* General clean up of yt2gif
-* Let scripts define real crop patterns and not just 'cinema'
