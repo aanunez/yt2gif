@@ -7,8 +7,7 @@ import requests
 import urllib.request
 
 if os.name != 'nt':
-	print("You don't need this, silly!")
-	raise SystemExit
+	print("This dones't look like Windows, but what do I know.")
 
 print("Downloading yotube-dl")
 req = requests.get('https://github.com/rg3/youtube-dl/releases/latest')
@@ -26,7 +25,7 @@ zip = zipfile.ZipFile('ffmpeg.zip', 'r')
 zip.extract('ffmpeg-4.0-win64-static/bin/ffmpeg.exe')
 zip.close()
 os.remove('ffmpeg.zip')
-os.rename('ffmpeg-4.0-win64-static\\bin\\ffmpeg.exe','ffmpeg.exe')
+os.rename(os.path.join('ffmpeg-4.0-win64-static','bin','ffmpeg.exe'),'ffmpeg.exe')
 shutil.rmtree('ffmpeg-4.0-win64-static')
 
 print("Done!")

@@ -1,14 +1,39 @@
 #!/usr/bin/env python3
 
 import yt2gif
-from argparse import ArgumentParser
-from shutil import rmtree
-from imp import load_source
-from os import rename, path
-from sys import argv
+import os
+import sys
+import imp
+import shutil
+import argparse
+import subprocess
+
+def check_dependencies():
+    flag = True
+    if os.name == 'nt':
+        if not os.path.isfile('ffmpeg.exe') or not os.path.isfile('youtube-dl.exe'):
+            print('Please run the win_dl.py script to grab ffmpeg and youtube-dl')
+    else:
+        try:
+            subprocess.call(['youtube-dl'],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError as e:
+            if e.errno == os.errno.ENOENT:
+                print('Please install youtube-dl')
+                flag = False
+            else:
+                raise
+        try:
+            subprocess.call(['ffmpeg'],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError as e:
+            if e.errno == os.errno.ENOENT:
+                print('Please install ffmpeg')
+                flag = False
+            else:
+                raise
+    return flag
 
 def parse_args():
-    parser = ArgumentParser(description=
+    parser = argparse.ArgumentParser(description=
         'Turn a youtube video into a gif!')
     parser.add_argument('-s','--script',
         help='Python file that specifies a gif to create. See the "examples" folder.')
@@ -25,18 +50,22 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    if len(argv) == 1:
-        argv.append('-h')
+    if len(sys.argv) == 1:
+        sys.argv.append('-h')
     opts = parse_args()
     
     if opts.cleanup:
-        rmtree('/'.join(yt2gif.td.split('/')[:-1]))
+        shutil.rmtree('/'.join(yt2gif.td.split('/')[:-1]))
         return
+    
+    if os.name !='nt':
+        if not check_dependencies():
+            raise SystemExit
     
     if not opts.url:
         global data
         with open(opts.script) as fh:
-            data = load_source('data','',fh)
+            data = imp.load_source('data','',fh)
 
         yt2gif.download_yt(data.url)
         yt2gif.make_cuts(data.cuttimes, opts.crop)
@@ -47,7 +76,7 @@ def main():
     else:
         yt2gif.download_yt(opts.url)
         yt2gif.make_cuts([tuple(opts.cut.split('-'))], opts.crop)
-        rename(path.join(yt2gif.td,'cut1.avi'), opts.name+'.avi')
+        os.rename(os.path.join(yt2gif.td,'cut1.avi'), opts.name+'.avi')
         
     yt2gif.gif_that(opts.name)
     yt2gif.cleanup()
