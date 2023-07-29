@@ -21,7 +21,7 @@ Create a rick and morty gif from RTJ's Oh Mama
 
     python3 -m yt2gif -u "https://www.youtube.com/watch?v=EBYsx1QWF9A" -c 00:01:53.0-00:01:54.2
     
-Or a gif of Awkwafina (a rapper) getting punched by her car
+Or a gif of Awkwafina (a rapper) getting punched by her cat
 
     python3 -m yt2gif -u "https://www.youtube.com/watch?v=0-taYShNaPU" -c 00:02:52.0-00:02:53.8
 
